@@ -86,34 +86,34 @@ abstract class JdbcDialect extends Serializable {
   def getJDBCType(dt: DataType): Option[JdbcType] = None
 
   /**
-   * Quotes the identifier. This is used to put quotes around the identifier in case the column
-   * name is a reserved keyword, or in case it contains characters that require quotes (e.g. space).
-   */
-  def quoteIdentifier(colName: String): String = {
-    s""""$colName""""
+    * Quotes the identifier. This is used to put quotes around the identifier in case the column/table
+    * name is a reserved keyword, or in case it contains characters that require quotes (e.g. space).
+    */
+  def quoteIdentifier(identifier: String): String = {
+    s""""$identifier""""
   }
 
   /**
-   * Get the SQL query that should be used to find if the given table exists. Dialects can
-   * override this method to return a query that works best in a particular database.
-   * @param table  The name of the table.
-   * @return The SQL query to use for checking the table.
-   */
+    * Get the SQL query that should be used to find if the given table exists. Dialects can
+    * override this method to return a query that works best in a particular database.
+    * @param table  The name of the table.
+    * @return The SQL query to use for checking the table.
+    */
   def getTableExistsQuery(table: String): String = {
-    s"SELECT * FROM $table WHERE 1=0"
+    s"SELECT * FROM ${quoteIdentifier(table)} WHERE 1=0"
   }
 
   /**
-   * The SQL query that should be used to discover the schema of a table. It only needs to
-   * ensure that the result set has the same schema as the table, such as by calling
-   * "SELECT * ...". Dialects can override this method to return a query that works best in a
-   * particular database.
-   * @param table The name of the table.
-   * @return The SQL query to use for discovering the schema.
-   */
+    * The SQL query that should be used to discover the schema of a table. It only needs to
+    * ensure that the result set has the same schema as the table, such as by calling
+    * "SELECT * ...". Dialects can override this method to return a query that works best in a
+    * particular database.
+    * @param table The name of the table.
+    * @return The SQL query to use for discovering the schema.
+    */
   @Since("2.1.0")
   def getSchemaQuery(table: String): String = {
-    s"SELECT * FROM $table WHERE 1=0"
+    s"SELECT * FROM ${quoteIdentifier(table)} WHERE 1=0"
   }
 
   /**
